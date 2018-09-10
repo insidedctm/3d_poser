@@ -1,0 +1,6 @@
+**/*.pyc
+
+data/train/*.tfrecords
+data/test/*.tfrecords
+data/val/*.tfrecords
+logs/*
