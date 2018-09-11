@@ -1,4 +1,5 @@
 **/*.pyc
+*.csv
 
 data/train/*.tfrecords
 data/test/*.tfrecords
