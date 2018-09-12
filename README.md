@@ -8,7 +8,7 @@ Data for training needs to be placed in the data/train folder, with validation d
 
 To train the batch_normalisation model with strong supervision:
 
-  python bn_main.py --name=bn_strong --learning_rate=0.0001  --batch_size=32 --gf_dim=32 --is_sup_train=True --max_iter=10001
+  ```python bn_main.py --name=bn_strong --learning_rate=0.0001  --batch_size=32 --gf_dim=32 --is_sup_train=True --max_iter=10001```
 
 
 ##================ Evaluation ===================
@@ -16,4 +16,8 @@ Models are saved to the checkout folder
 
 To evaluate on SURREAL data
  
-  python model_evaluate.py --name=bn_strong --batch_size=25 --data_name=SURREAL --max_iter=12528
+  ```python model_evaluate.py --name=bn_strong --batch_size=25 --data_name=SURREAL --max_iter=12528```
+
+To evaluate on Human3.6M data
+  
+  ```python model_evaluate.py --name=bn_strong --batch_size=5 --data_name=H36M --max_iter=100000```

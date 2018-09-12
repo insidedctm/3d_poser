@@ -1,3 +1,4 @@
+.DS_store
 **/*.pyc
 *.csv
 
@@ -5,3 +6,5 @@ data/train/*.tfrecords
 data/test/*.tfrecords
 data/val/*.tfrecords
 logs/*
+data/*
+json/*
