@@ -1,3 +1,4 @@
+# Based on the _3DINN class from https://github.com/htung0101/3d_smpl
 from __future__ import division
 import os
 import time
@@ -963,7 +964,6 @@ class _3DINNBatchNormalisation(object):
                          self.seg_gt:batch_seg_v, self.f_gt: batch_f_v,
                          self.c_gt: batch_c_v,
                          self.pmesh_gt:batch_pmesh_v,
-                         self.chamfer_gt: batch_chamfer_v,
                          self.images:batch_image_v, 
                          self.resize_scale_gt: batch_resize_scale_v})
                 #print "time:", time.time() - start
@@ -975,11 +975,11 @@ class _3DINNBatchNormalisation(object):
                 # visibility to save time
                 if self.is_unsup_train:
                   step, summ_str, sup_loss, recon_loss, v, J, d3_loss, d3_joint_loss, d3_c_loss, d2_loss,\
-                  d2_joint_loss, project1, flow, silh_loss, S_M1, C_M1, beta_loss, pose_loss,\
+                  d2_joint_loss, project1, beta_loss, pose_loss,\
                   R_loss, T_loss\
                      = self.sess.run([self.global_step, self.syn_summary, self.sup_loss, self.recon_loss, self.v[0],
                      self.J[0], self.d3_loss, self.d3_joint_loss, self.centered_d3_joint_loss, self.d2_loss, self.d2_joint_loss,\
-                     self.project1, self.flow, self.silh_loss, self.S_M[0], self.C_M[0],\
+                     self.project1,\
                      self.beta_loss, self.pose_loss, self.R_loss, self.T_loss], 
                      feed_dict={self.beta_gt:batch_beta, self.pose_gt:batch_pose, 
                            self.T_gt: batch_T, self.R_gt:batch_R,
@@ -989,22 +989,21 @@ class _3DINNBatchNormalisation(object):
                            self.seg_gt:batch_seg, self.f_gt: batch_f,
                            self.c_gt: batch_c,
                            self.v_gt:batch_v_gt,
-                           self.chamfer_gt: batch_chamfer,
                            self.images:batch_image, 
                            self.resize_scale_gt: batch_resize_scale})
                   self.writer.add_summary(summ_str, step)
                   print("[%s, iter: %d, step: %d] recon_loss: %.4f, d3_loss: %.4f (%.6f) (%.4f), d2_loss: %.4f (%.6f), "
-                      "silh_loss: %.4f, beta_loss: %.4f, pose_loss: %.4f, R_loss:%.4f, T_loss: %.4f" \
-                      %(self.config.name, idx, step, recon_loss, d3_joint_loss, d3_loss, d3_c_loss, d2_joint_loss, d2_loss, silh_loss, beta_loss, pose_loss, R_loss, T_loss))
+                      "beta_loss: %.4f, pose_loss: %.4f, R_loss:%.4f, T_loss: %.4f" \
+                      %(self.config.name, idx, step, recon_loss, d3_joint_loss, d3_loss, d3_c_loss, d2_joint_loss, d2_loss, beta_loss, pose_loss, R_loss, T_loss))
                   #print "time2:", time.time() - start
                 
        
                   step, summ_str, sup_loss, recon_loss, v, J, d3_loss, d3_joint_loss, d3_c_loss, d2_loss,\
-                  d2_joint_loss, project1, flow, silh_loss, S_M1, C_M1, beta_loss, pose_loss,\
+                  d2_joint_loss, project1, flow, beta_loss, pose_loss,\
                   R_loss, T_loss, project_mesh0, project_mesh1, beta1, pose1\
                      = self.sess.run([self.global_step, self.syn_v_summary, self.sup_loss, self.recon_loss, self.v[0],
                      self.J[0], self.d3_loss, self.d3_joint_loss, self.centered_d3_joint_loss, self.d2_loss, self.d2_joint_loss,\
-                     self.project1, self.flow, self.silh_loss, self.S_M[0], self.C_M[0],\
+                     self.project1, self.flow,\
                      self.beta_loss, self.pose_loss, self.R_loss, self.T_loss,
                      self.project_mesh0, self.project_mesh1, self.beta_hat, self.pose_hat],
                      feed_dict={self.beta_gt:batch_beta_v, self.pose_gt:batch_pose_v, 
@@ -1016,13 +1015,12 @@ class _3DINNBatchNormalisation(object):
                          self.c_gt: batch_c_v,
                          self.v_gt:batch_v_gt_v,
                          self.pmesh_gt:batch_pmesh_v,
-                         self.chamfer_gt: batch_chamfer_v,
                          self.images:batch_image_v, 
                          self.resize_scale_gt: batch_resize_scale_v})
                   self.writer.add_summary(summ_str, step)
                   print("[test, iter: %d] recon_loss: %.4f, d3_loss: %.4f (%.6f)(%.4f), d2_loss: %.4f (%.6f), "
-                    "silh_loss: %.4f, beta_loss: %.4f, pose_loss: %.4f, R_loss:%.4f, T_loss: %.4f" \
-                    %(idx, recon_loss, d3_joint_loss, d3_loss, d3_c_loss, d2_joint_loss, d2_loss, silh_loss, beta_loss, pose_loss, R_loss, T_loss))
+                    "beta_loss: %.4f, pose_loss: %.4f, R_loss:%.4f, T_loss: %.4f" \
+                    %(idx, recon_loss, d3_joint_loss, d3_loss, d3_c_loss, d2_joint_loss, d2_loss, beta_loss, pose_loss, R_loss, T_loss))
                  
                 else: # training with only supervision
                     # dump results from training and validation data

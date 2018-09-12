@@ -8,3 +8,4 @@ data/val/*.tfrecords
 logs/*
 data/*
 json/*
+checkpoint/*
