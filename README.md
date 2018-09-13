@@ -12,12 +12,12 @@ To train the batch_normalisation model with strong supervision:
 
 To train the dropout model with strong supervision (using the batch normalisation model as a starting point):
 
-  ``` python dropout_main.py --name=dropout_strong --learning_rate=0.001 --batch_size=32 --gf_dim=32 --is_sup_train=True \
-        --model_dir=checkpoint/bn_strong --keep_prob=0.8 --max_iter=10001 ```
+  ```python dropout_main.py --name=dropout_strong --learning_rate=0.001 --batch_size=32 --gf_dim=32 --is_sup_train=True 
+        --model_dir=checkpoint/bn_strong --keep_prob=0.8 --max_iter=10001```
 
 To fine-tune the batch_normalisation models with weak supervision:
 
-  ```python bn_main.py --name=bn_strong_finetune --learning_rate=0.000001 --batch_size=2 --model_dir=checkpoint/bn_strong \
+  ```python bn_main.py --name=bn_strong_finetune --learning_rate=0.000001 --batch_size=2 --model_dir=checkpoint/bn_strong
   --gf_dim=32 --is_sup_train=False --key_loss=True --max_iter=1001```
 
 ### Evaluation 
