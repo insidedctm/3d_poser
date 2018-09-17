@@ -19,6 +19,7 @@ from tqdm import tqdm
 
 class _3DINNDropout(object):
     def __init__(self, sess, checkpoint_dir, logs_dir, sample_dir, config=None):
+        print("Dropout model: keep_prob={}".format(config.keep_prob))
         self.sess = sess
         self.config = config
         self.is_unsup_train = self.config.key_loss

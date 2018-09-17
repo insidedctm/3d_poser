@@ -1,5 +1,6 @@
 import os
 from bn_model import _3DINNBatchNormalisation
+from dropout_model import _3DINNDropout
 import tensorflow as tf
 import glob
 import evaluation
@@ -47,6 +48,8 @@ flags.DEFINE_boolean("key_loss", False, "True for using unsupervised keypoint lo
 flags.DEFINE_integer("data_version", 2, "1=original 3d_smpl format, 2=include identifier, 3=J_3d_gt" )
 flags.DEFINE_string("data_name", "H36M", "Either H36M or SURREAL to indicate the data to be evaluated")
 flags.DEFINE_string("evaluation_output", "model_evaluation.csv", "")
+flags.DEFINE_float("keep_prob", 0.8, "Dropout model dropout (= 1-keep_prob) probability")
+flags.DEFINE_string("model_type", "BatchNormalisation", "Either BatchNormalisation or Dropout")
 FLAGS = flags.FLAGS
 
 def main(_):
@@ -61,7 +64,11 @@ def main(_):
         os.makedirs(logs_dir_)
     gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.9)
     with tf.Session(config=tf.ConfigProto(gpu_options=gpu_options)) as sess:
-        m = _3DINNBatchNormalisation(sess, config=FLAGS, checkpoint_dir=checkpoint_dir_,
+        if FLAGS.model_type == "BatchNormalisation":
+          m = _3DINNBatchNormalisation(sess, config=FLAGS, checkpoint_dir=checkpoint_dir_,
+                         logs_dir=logs_dir_, sample_dir=sample_dir_)
+        else:
+          m = _3DINNDropout(sess, config=FLAGS, checkpoint_dir=checkpoint_dir_,
                          logs_dir=logs_dir_, sample_dir=sample_dir_)
 
         test_filenames = glob.glob('data/test/*.tfrecords')
